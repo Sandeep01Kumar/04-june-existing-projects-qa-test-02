@@ -1,0 +1,1 @@
+- <span style="color: rgb(0, 0, 0);">This codebase is a simple “Hello World” Node.js server intended as a test project for integrating with Backprop, a tool or service likely used for code analysis, refactoring, or AI-assisted development. It’s clearly marked as a test project and not meant for production use.</span>
