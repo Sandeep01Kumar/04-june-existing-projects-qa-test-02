@@ -2,6 +2,7 @@ const express = require('express'); // Import the Express web framework (replace
 const hostname = '127.0.0.1'; // Preserve the original loopback host binding so the server stays reachable only on the local machine (backward-compat A4).
 const port = 3000; // Preserve the original TCP port so existing clients and cold-start checks against :3000 keep working (backward-compat A4).
 const app = express(); // Create the Express application instance that registers routes and dispatches incoming HTTP requests (replaces http.createServer).
+app.set('case sensitive routing', true); // Enable case-sensitive routing so paths differing only in letter case (e.g. '/EVENING' or '/Evening') do NOT match the registered lowercase '/evening' route and instead fall through to Express's default 404 handler (final-acceptance requirement: /EVENING must return 404).
 app.get('/', (req, res) => { // Register a handler for HTTP GET requests to the root path '/', preserving the original greeting endpoint (O3).
   res.type('text/plain'); // Force the Content-Type to text/plain to match the original handler, since Express defaults res.send(String) to text/html (A2).
   res.status(200).send('Hello, World!\n'); // Respond with HTTP 200 and the byte-identical original body, including the trailing newline (O3/A3).

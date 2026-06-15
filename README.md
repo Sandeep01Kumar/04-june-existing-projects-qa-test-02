@@ -17,7 +17,9 @@ The server binds to the loopback interface at `http://127.0.0.1:3000/`.
 | GET | `/` | 200 | `text/plain` | `Hello, World!\n` |
 | GET | `/evening` | 200 | `text/plain` | `Good evening` |
 
-Any other path returns Express's default `404 Not Found` response.
+### Routing behavior
+
+Routing is **case-sensitive** (enabled with `app.set('case sensitive routing', true)`), so a path that differs only in letter case — for example `/EVENING` or `/Evening` — does **not** match `/evening` and returns Express's default `404 Not Found` response. Routing uses Express's default **non-strict** mode, so a trailing slash on a registered path — for example `/evening/` — still matches its route and returns `200`. Any other unregistered path returns `404`.
 
 ## Getting Started
 

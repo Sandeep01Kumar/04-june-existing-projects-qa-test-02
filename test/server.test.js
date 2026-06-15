@@ -25,4 +25,8 @@ describe('edge cases', () => { // Group the edge-case tests covering unmatched r
     const res = await request(app).post('/'); // Send a POST request to the root path, which only has a GET handler registered.
     expect(res.status).toBe(404); // Assert that Express responds with a 404 status for the unhandled method/route combination.
   }); // Close the it() callback for the unsupported-method edge case.
+  it('returns 404 for /EVENING (case-sensitive routing)', async () => { // Assert that an uppercase path variant does NOT match the lowercase '/evening' route, proving case-sensitive routing is enabled.
+    const res = await request(app).get('/EVENING'); // Send a GET request to the uppercase path variant '/EVENING' that differs from the registered route only in letter case.
+    expect(res.status).toBe(404); // Assert that Express responds with a 404 (Not Found) because case-sensitive routing prevents the uppercase variant from matching the registered '/evening' route.
+  }); // Close the it() callback for the case-sensitivity edge case.
 }); // Close the describe() block for the edge-case group.
