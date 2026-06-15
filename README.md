@@ -2,7 +2,7 @@
 
 A minimal Node.js HTTP server built with the [Express](https://expressjs.com/) framework. It exposes two plain-text endpoints and serves as a small tutorial project.
 
-> **Note:** This repository began as a test project for backprop integration. It has since been extended into a minimal Express tutorial and is now actively maintained — the earlier "do not touch" note no longer applies.
+> **Note:** This repository began as a backprop integration test project and has since been extended into a minimal Express tutorial; it is now actively maintained.
 
 ## Prerequisites
 
