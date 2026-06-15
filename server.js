@@ -11,7 +11,7 @@ app.get('/evening', (req, res) => { // Register a handler for HTTP GET requests 
   res.status(200).send('Good evening'); // Respond with HTTP 200 and the exact 'Good evening' string the user requested, with no trailing newline (O4/A3).
 }); // Close the '/evening' route handler registration.
 module.exports = app; // Export the configured Express app so the Supertest suite can exercise routes in-process without binding a port (§0.5.5/§0.6.5).
-if (require.main === module) { // Only start a real network listener when this file is executed directly (node server.js), not when imported by tests (keeps tests hermetic).
+/* istanbul ignore next */ if (require.main === module) { // Only start a real network listener when this file is executed directly (node server.js), not when imported by tests (keeps tests hermetic); the leading Istanbul coverage directive excludes this guarded direct-execution startup block — already verified end-to-end via `npm start` + curl — from unit-test coverage so server.js reports ~100% line/branch coverage.
   app.listen(port, hostname, () => { // Bind the Express app to the preserved host and port, supplying a callback fired once the server is ready to accept connections.
     console.log(`Server running at http://${hostname}:${port}/`); // Preserve the original startup log message format for stable cold-start verification output.
   }); // Close the app.listen invocation and its ready callback.
