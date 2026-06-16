@@ -2,7 +2,7 @@
 
 > **Note:** This README's title is `hao-backprop-test`, but the npm package is named `hello_world`. See [Notes / Known Discrepancies](#notes--known-discrepancies). _Source: README.md:L1; package.json:L2_
 
-A minimal HTTP server built with the Node.js built-in `http` module. It listens on `http://127.0.0.1:3000/` and replies to **every** request — any HTTP method, any URL path — with a single static plain-text response: `Hello, World!`. _Source: server.js:L17,L26,L33,L49-L53_
+A minimal HTTP server built with the Node.js built-in `http` module. It listens on `http://127.0.0.1:3000/` and replies to **every** request it receives — any URL path, and any HTTP method recognized by Node's HTTP parser — with a single static plain-text response: `Hello, World!`. _Source: server.js:L17,L26,L33,L49-L53_
 
 ## Table of Contents
 
@@ -69,15 +69,29 @@ Server running at http://127.0.0.1:3000/
 
 ## API Documentation
 
-The server exposes a single, universal endpoint with **no routing and no method discrimination** — every request receives the same response. _Source: server.js:L49-L53_
+The server's request handler performs **no routing and no method discrimination** — every request it receives gets the same response. _Source: server.js:L49-L53_
 
 ### Endpoint
 
 | Property | Value |
 |----------|-------|
 | Base URL | `http://127.0.0.1:3000/` _Source: server.js:L26,L33_ |
-| Methods | Any (GET, POST, …) — all identical _Source: server.js:L49-L53_ |
+| Methods | Any method Node's HTTP parser recognizes — all handled identically; see [Method handling](#method-handling) _Source: server.js:L49-L53_ |
 | Path | Any — all identical _Source: server.js:L49-L53_ |
+
+### Method handling
+
+The request handler performs no method inspection — it never branches on `req.method`, so it never rejects a request on its own. _Source: server.js:L49-L53_ Incoming requests are, however, parsed by Node's built-in HTTP parser **before** they reach the handler, and that parser accepts only the method tokens it recognizes (the set Node exposes as `http.METHODS` — every standard method plus the extension methods Node knows). Requests that use a recognized method therefore all reach the handler and receive the identical `200` / `text/plain` / `Hello, World!\n` response.
+
+A request whose method token is **not** recognized by Node's HTTP parser — an arbitrary custom token such as `FOO` or `CUSTOMMETHOD` — is rejected by Node with `400 Bad Request` and `Connection: close`; the handler is never invoked:
+
+```bash
+curl -i -X FOO http://127.0.0.1:3000/
+# HTTP/1.1 400 Bad Request
+# Connection: close
+```
+
+This rejection is standard Node.js HTTP behavior and is independent of this application's code. _Source: server.js:L49-L53_
 
 ### Request / Response
 
@@ -109,11 +123,11 @@ The body is exactly `Hello, World!` followed by a single newline. _Source: serve
 
 ### Request/Response Flow
 
-Any request — regardless of HTTP method or URL path — to `127.0.0.1:3000` receives status `200`, `Content-Type: text/plain`, and the body `Hello, World!\n`: _Source: server.js:L26,L33,L49-L53_
+Every request the server accepts — any URL path, and any HTTP method recognized by Node's HTTP parser — to `127.0.0.1:3000` receives status `200`, `Content-Type: text/plain`, and the body `Hello, World!\n`: _Source: server.js:L26,L33,L49-L53_
 
 ```mermaid
 sequenceDiagram
-    participant C as Client (any method, any path)
+    participant C as Client (any recognized method, any path)
     participant S as server.js http.createServer
     C->>S: HTTP request to 127.0.0.1:3000
     Note over S: res.statusCode = 200

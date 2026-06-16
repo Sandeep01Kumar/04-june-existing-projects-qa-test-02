@@ -4,9 +4,9 @@
  * This is a runnable entry-point script: execute it directly with
  * `node server.js`. It relies solely on the Node.js built-in `http` module,
  * declares no third-party dependencies, and intentionally exports nothing (it
- * is not meant to be imported). For every incoming request, regardless of HTTP
- * method or URL path, the server responds with HTTP 200, a `text/plain`
- * content type, and the body `Hello, World!\n`.
+ * is not meant to be imported). The request handler applies no routing or
+ * method discrimination, replying to every request it receives with HTTP 200,
+ * a `text/plain` content type, and the body `Hello, World!\n`.
  *
  * @module server
  * @requires http
